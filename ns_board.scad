@@ -1,11 +1,11 @@
-include <dimensions.scad>;
+include <ns_board_dimensions.scad>;
 
 module base() {
   cube(
     size=[
-      case_width,
-      case_height,
-      case_thickness
+      ns_board_width,
+      ns_board_height,
+      ns_board_thickness
     ]
   );
 }
@@ -50,10 +50,10 @@ module standoff(height = 10) {
 }
 
 module screw_hole_standoffs(height = 10) {
-  translate(concat(bottom_left_screw_center_origin, case_thickness)) standoff();
-  translate(concat(bottom_right_screw_center_origin, case_thickness)) standoff();
-  translate(concat(top_left_screw_center_origin, case_thickness)) standoff();
-  translate(concat(top_right_screw_center_origin, case_thickness)) standoff();
+  translate(concat(bottom_left_screw_center_origin, ns_board_thickness)) standoff();
+  translate(concat(bottom_right_screw_center_origin, ns_board_thickness)) standoff();
+  translate(concat(top_left_screw_center_origin, ns_board_thickness)) standoff();
+  translate(concat(top_right_screw_center_origin, ns_board_thickness)) standoff();
 }
 
 module base_with_legs() {

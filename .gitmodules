@@ -1,0 +1,4 @@
+[submodule "libs/nutsnbolts"]
+	path = libs/nutsnbolts
+	url = https://github.com/JohK/nutsnbolts.git
+	branch = master

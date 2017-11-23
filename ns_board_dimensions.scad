@@ -1,5 +1,5 @@
-case_width = 85;
-case_height = 54;
+ns_board_width = 85;
+ns_board_height = 54;
 
 // M2.5 Screw Holes
 screw_hole_clearance = 2.75;
@@ -13,4 +13,4 @@ top_left_screw_center_origin = [4, 50];
 top_right_screw_center_origin = [81, 50];
 
 // case thickness
-case_thickness = 2.5;
+ns_board_thickness = 2.5;
