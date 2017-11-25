@@ -61,14 +61,18 @@ module side_enclosure_part() {
       translate([-lcd_enclosure_thickness, lcd_height_with_tolerance - lcd_screen_edge_tolerance, lcd_screen_thickness + lcd_enclosure_thickness]) side_top_rim_part();
       translate([-lcd_enclosure_thickness, 0, lcd_enclosure_thickness + lcd_screen_thickness]) side_top_rim_part();
     }
-    translate([(lcd_width_with_tolerance / 2 / 2) + (lcd_enclosure_thickness * 2), -lcd_enclosure_thickness, ((lcd_enclosure_thickness + lcd_screen_thickness + lcd_enclosure_thickness) / 2) + .1]) rotate([90, 0, 0]) hole_through(name="M3", l=lcd_height_with_tolerance * 2, h=0,  cld=0.2);
+
+    translate([0, -(lcd_height_with_tolerance / 2), 0]) {
+      translate([(lcd_width_with_tolerance / 2 / 2) + (lcd_enclosure_thickness * 2), -lcd_enclosure_thickness, ((lcd_enclosure_thickness + lcd_screen_thickness + lcd_enclosure_thickness) / 2) + .1]) rotate([90, 0, 0]) hole_through(name="M3", l=lcd_height_with_tolerance * 2, h=0,  cld=0.2);
+      translate([(lcd_width_with_tolerance / 2 / 2) + (lcd_enclosure_thickness * 2) - (((lcd_width_with_tolerance / 2 / 2) + lcd_enclosure_thickness) / 2), -lcd_enclosure_thickness, ((lcd_enclosure_thickness + lcd_screen_thickness + lcd_enclosure_thickness) / 2) + .1]) rotate([90, 0, 0]) hole_through(name="M3", l=lcd_height_with_tolerance * 2, h=0,  cld=0.2);
+    }
   }
 }
 
 module connector_bridge_side() {
   cube(size=[
     lcd_width_with_tolerance / 2,
-    lcd_enclosure_thickness + lcd_screen_thickness + lcd_enclosure_thickness,
+    (lcd_enclosure_thickness * 2) + lcd_screen_thickness,
     lcd_enclosure_thickness
   ]);
 }
@@ -77,13 +81,13 @@ module connector_bridge_vertical_side() {
   cube(size=[
     lcd_width_with_tolerance / 2,
     lcd_enclosure_thickness,
-    lcd_enclosure_thickness + lcd_screen_thickness + lcd_enclosure_thickness
+    (lcd_enclosure_thickness * 2) + lcd_screen_thickness
   ]);
 }
 
 module top_curved_bridge_part() {
   width = (lcd_width_with_tolerance / 2 / 2) + lcd_enclosure_thickness;
-  height = lcd_screen_edge_tolerance + lcd_enclosure_thickness;
+  height = lcd_enclosure_thickness + lcd_screen_thickness + lcd_enclosure_thickness;
   length = lcd_enclosure_thickness + lcd_screen_thickness + lcd_enclosure_thickness;
 
   polyhedron(
@@ -118,7 +122,7 @@ module full_bridge() {
       connector_bridge_side();
       translate([0, 0, lcd_enclosure_thickness + lcd_screen_thickness]) connector_bridge_side();
       connector_bridge_vertical_side();
-      translate([0, lcd_screen_edge_tolerance, 0]) connector_bridge_vertical_side();
+      translate([0, lcd_screen_thickness + lcd_enclosure_thickness, 0]) connector_bridge_vertical_side();
       translate([(-lcd_width_with_tolerance / 2 / 2) - lcd_enclosure_thickness, 0, 0]) top_curved_bridge_part();
       mirror([1, 0, 0]) translate([-lcd_width_with_tolerance - lcd_enclosure_thickness - lcd_enclosure_thickness + ((lcd_width_with_tolerance / 2 / 2) + lcd_enclosure_thickness), 0, 0]) top_curved_bridge_part();
       cube(size=[
@@ -134,16 +138,16 @@ module full_bridge() {
     }
     // nut hatch
     translate([lcd_enclosure_thickness * 2 - (((lcd_width_with_tolerance / 2 / 2) + lcd_enclosure_thickness) / 2), lcd_enclosure_thickness, ((lcd_enclosure_thickness + lcd_screen_thickness + lcd_enclosure_thickness) / 2) + .1]) rotate([90, 270, 0]) nutcatch_sidecut("M3", $fn=40, l=100, clk=0.5, clh=0.5, clsl=0.5);
-    translate([lcd_enclosure_thickness * 2 - (((lcd_width_with_tolerance / 2 / 2) + lcd_enclosure_thickness) / 2), -lcd_enclosure_thickness, ((lcd_enclosure_thickness + lcd_screen_thickness + lcd_enclosure_thickness) / 2) + .1]) rotate([90, 0, 0]) hole_through(name="M3", l=(lcd_screen_edge_tolerance * 2), h=0,  cld=0.2);
+    translate([lcd_enclosure_thickness * 2 - (((lcd_width_with_tolerance / 2 / 2) + lcd_enclosure_thickness) / 2), -lcd_enclosure_thickness, ((lcd_enclosure_thickness + lcd_screen_thickness + lcd_enclosure_thickness) / 2) + .1]) rotate([90, 0, 0]) hole_through(name="M3", l=(lcd_height_with_tolerance), h=0,  cld=0.2);
     // nut hatch
     translate([lcd_enclosure_thickness * 2, lcd_enclosure_thickness, ((lcd_enclosure_thickness + lcd_screen_thickness + lcd_enclosure_thickness) / 2) + .1]) rotate([90, 270, 0]) nutcatch_sidecut("M3", $fn=40, l=100, clk=0.5, clh=0.5, clsl=0.5);
-    translate([lcd_enclosure_thickness * 2, -lcd_enclosure_thickness, ((lcd_enclosure_thickness + lcd_screen_thickness + lcd_enclosure_thickness) / 2) + .1]) rotate([90, 0, 0]) hole_through(name="M3", l=(lcd_screen_edge_tolerance * 2), h=0,  cld=0.2);
+    translate([lcd_enclosure_thickness * 2, -lcd_enclosure_thickness, ((lcd_enclosure_thickness + lcd_screen_thickness + lcd_enclosure_thickness) / 2) + .1]) rotate([90, 0, 0]) hole_through(name="M3", l=lcd_height_with_tolerance, h=0,  cld=0.2);
     // nut hatch
-    translate([(lcd_width_with_tolerance / 2) - 5, lcd_enclosure_thickness, ((lcd_enclosure_thickness + lcd_screen_thickness + lcd_enclosure_thickness) / 2) + .1]) rotate([90, 270, 0]) nutcatch_sidecut("M3", $fn=40, l=100, clk=0.5, clh=0.5, clsl=0.5);
-    translate([(lcd_width_with_tolerance / 2) - 5, -lcd_enclosure_thickness, ((lcd_enclosure_thickness + lcd_screen_thickness + lcd_enclosure_thickness) / 2) + .1]) rotate([90, 0, 0]) hole_through(name="M3", l=(lcd_screen_edge_tolerance * 2), h=0, cld=0.2);  
+    translate([(lcd_width_with_tolerance / 2) - (lcd_enclosure_thickness * 2), lcd_enclosure_thickness, ((lcd_enclosure_thickness + lcd_screen_thickness + lcd_enclosure_thickness) / 2) + .1]) rotate([90, 270, 0]) nutcatch_sidecut("M3", $fn=40, l=100, clk=0.5, clh=0.5, clsl=0.5);
+    translate([(lcd_width_with_tolerance / 2) - (lcd_enclosure_thickness * 2), -lcd_enclosure_thickness, ((lcd_enclosure_thickness + lcd_screen_thickness + lcd_enclosure_thickness) / 2) + .1]) rotate([90, 0, 0]) hole_through(name="M3", l=lcd_height_with_tolerance, h=0, cld=0.2);
     // nut hatch
-    translate([(lcd_width_with_tolerance / 2) - 5 + (((lcd_width_with_tolerance / 2 / 2) + lcd_enclosure_thickness) / 2), lcd_enclosure_thickness, ((lcd_enclosure_thickness + lcd_screen_thickness + lcd_enclosure_thickness) / 2) + .1]) rotate([90, 270, 0]) nutcatch_sidecut("M3", $fn=40, l=100, clk=0.5, clh=0.5, clsl=0.5);
-    translate([(lcd_width_with_tolerance / 2) - 5 + (((lcd_width_with_tolerance / 2 / 2) + lcd_enclosure_thickness) / 2), -lcd_enclosure_thickness, ((lcd_enclosure_thickness + lcd_screen_thickness + lcd_enclosure_thickness) / 2) + .1]) rotate([90, 0, 0]) hole_through(name="M3", l=(lcd_screen_edge_tolerance * 2), h=0, cld=0.2);
+    translate([(lcd_width_with_tolerance / 2) - (lcd_enclosure_thickness * 2) + (((lcd_width_with_tolerance / 2 / 2) + lcd_enclosure_thickness) / 2), lcd_enclosure_thickness, ((lcd_enclosure_thickness + lcd_screen_thickness + lcd_enclosure_thickness) / 2) + .1]) rotate([90, 270, 0]) nutcatch_sidecut("M3", $fn=40, l=100, clk=0.5, clh=0.5, clsl=0.5);
+    translate([(lcd_width_with_tolerance / 2) - (lcd_enclosure_thickness * 2) + (((lcd_width_with_tolerance / 2 / 2) + lcd_enclosure_thickness) / 2), -lcd_enclosure_thickness, ((lcd_enclosure_thickness + lcd_screen_thickness + lcd_enclosure_thickness) / 2) + .1]) rotate([90, 0, 0]) hole_through(name="M3", l=lcd_height_with_tolerance, h=0, cld=0.2);
   }
 }
 
