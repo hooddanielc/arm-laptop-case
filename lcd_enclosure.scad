@@ -45,7 +45,7 @@ module side_back_rim_part() {
 module side_top_rim_part() {
   cube(size=[
     (lcd_width_with_tolerance / 3) + lcd_enclosure_thickness,
-    lcd_screen_edge_tolerance + lcd_enclosure_thickness,
+    lcd_screen_edge_tolerance,
     lcd_enclosure_thickness
   ]);
 }
@@ -57,7 +57,7 @@ module side_enclosure_part() {
     translate([0, 0, lcd_screen_thickness + lcd_enclosure_thickness]) side_top_edge_part();
     translate([-lcd_enclosure_thickness, lcd_height_with_tolerance, 0]) side_back_rim_part();
     translate([-lcd_enclosure_thickness, 0, 0]) side_back_rim_part();
-    translate([-lcd_enclosure_thickness, lcd_height_with_tolerance - lcd_screen_edge_tolerance - lcd_enclosure_thickness, lcd_screen_thickness + lcd_enclosure_thickness]) side_top_rim_part();
+    translate([-lcd_enclosure_thickness, lcd_height_with_tolerance - lcd_screen_edge_tolerance, lcd_screen_thickness + lcd_enclosure_thickness]) side_top_rim_part();
     translate([-lcd_enclosure_thickness, 0, lcd_enclosure_thickness + lcd_screen_thickness]) side_top_rim_part();
   }
 }
@@ -127,10 +127,10 @@ module full_bridge() {
 }
 
 // Left Side Enclosure
-// color(c=[0, 1, 1, 0.7]) side_enclosure_part();
+color(c=[0, 1, 1, 0.7]) side_enclosure_part();
 
-// // Right Side Enclosure
-// color(c=[1, 0, 1, 0.7]) translate([lcd_width_with_tolerance, 0, 0]) mirror([1,0,0]) side_enclosure_part();
+// Right Side Enclosure
+color(c=[1, 0, 1, 0.7]) translate([lcd_width_with_tolerance, 0, 0]) mirror([1,0,0]) side_enclosure_part();
 
 // Full Bridge Top
 color(c=[0, 0, 0.5, 0.7]) translate([
