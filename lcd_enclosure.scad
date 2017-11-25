@@ -1,3 +1,4 @@
+include <libs/nutsnbolts/cyl_head_bolt.scad>
 include <lcd_enclosure_dimensions.scad>
 
 module lcd() {
@@ -109,21 +110,27 @@ module top_curved_bridge_part() {
 }
 
 module full_bridge() {
-  union () {
-    connector_bridge_side();
-    translate([0, 0, lcd_enclosure_thickness + lcd_screen_thickness]) connector_bridge_side();
-    connector_bridge_vertical_side();
-    translate([0, lcd_screen_edge_tolerance, 0]) connector_bridge_vertical_side();
-    translate([(-lcd_width_with_tolerance / 2 / 2) - lcd_enclosure_thickness, 0, 0]) top_curved_bridge_part();
-    mirror([1, 0, 0]) translate([-lcd_width_with_tolerance - lcd_enclosure_thickness - lcd_enclosure_thickness + ((lcd_width_with_tolerance / 2 / 2) + lcd_enclosure_thickness), 0, 0]) top_curved_bridge_part();
+  difference() {
+    union () {
+      connector_bridge_side();
+      translate([0, 0, lcd_enclosure_thickness + lcd_screen_thickness]) connector_bridge_side();
+      connector_bridge_vertical_side();
+      translate([0, lcd_screen_edge_tolerance, 0]) connector_bridge_vertical_side();
+      translate([(-lcd_width_with_tolerance / 2 / 2) - lcd_enclosure_thickness, 0, 0]) top_curved_bridge_part();
+      mirror([1, 0, 0]) translate([-lcd_width_with_tolerance - lcd_enclosure_thickness - lcd_enclosure_thickness + ((lcd_width_with_tolerance / 2 / 2) + lcd_enclosure_thickness), 0, 0]) top_curved_bridge_part();
+    }
+    translate([5, lcd_enclosure_thickness, ((lcd_enclosure_thickness + lcd_screen_thickness + lcd_enclosure_thickness) / 2) + .1]) rotate([90, 270, 0]) nutcatch_sidecut("M3", $fn=40, l=100, clk=0.1, clh=0.1, clsl=0.1);
+    translate([(lcd_width_with_tolerance / 2) - 5, lcd_enclosure_thickness, ((lcd_enclosure_thickness + lcd_screen_thickness + lcd_enclosure_thickness) / 2) + .1]) rotate([90, 270, 0]) nutcatch_sidecut("M3", $fn=40, l=100, clk=0.1, clh=0.1, clsl=0.1);
+    translate([5, -lcd_enclosure_thickness, ((lcd_enclosure_thickness + lcd_screen_thickness + lcd_enclosure_thickness) / 2) + .1]) rotate([90, 0, 0]) hole_through(name="M3", l=(lcd_screen_edge_tolerance * 2), cl=0.1, h=0, hcl=0.4);
+    translate([(lcd_width_with_tolerance / 2) - 5, -lcd_enclosure_thickness, ((lcd_enclosure_thickness + lcd_screen_thickness + lcd_enclosure_thickness) / 2) + .1]) rotate([90, 0, 0]) hole_through(name="M3", l=(lcd_screen_edge_tolerance * 2), cl=0.1, h=0, hcl=0.4);  
   }
 }
 
 // Left Side Enclosure
-color(c=[0, 1, 1, 0.7]) side_enclosure_part();
+// color(c=[0, 1, 1, 0.7]) side_enclosure_part();
 
-// Right Side Enclosure
-color(c=[1, 0, 1, 0.7]) translate([lcd_width_with_tolerance, 0, 0]) mirror([1,0,0]) side_enclosure_part();
+// // Right Side Enclosure
+// color(c=[1, 0, 1, 0.7]) translate([lcd_width_with_tolerance, 0, 0]) mirror([1,0,0]) side_enclosure_part();
 
 // Full Bridge Top
 color(c=[0, 0, 0.5, 0.7]) translate([
