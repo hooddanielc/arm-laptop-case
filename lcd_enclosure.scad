@@ -94,19 +94,16 @@ module top_curved_bridge_part() {
     faces=[
       // slanted sides
       [0, 1, 2],
-      [3, 4, 5],
+      [3, 5, 4],
 
       // bottom
-      [0, 3, 1],
-      [3, 4, 1],
+      [0, 3, 4, 1],
 
       // square
-      [1, 5, 2],
-      [1, 4, 5],
+      [1, 4, 5, 2],
 
-      // top slanted square
-      [0, 2, 5],
-      [0, 3, 5]
+      // perfect square side
+      [0, 2, 5, 3]
     ]
   );
 }
