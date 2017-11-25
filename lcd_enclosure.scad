@@ -1,4 +1,5 @@
 include <libs/nutsnbolts/cyl_head_bolt.scad>
+use <ns_board.scad>
 
 module lcd_enclosure(
   lcd_screen_diagonal_size = 260,
@@ -283,8 +284,6 @@ module lcd_enclosure(
   // Left Side Enclosure
   color(c=[0, 1, 1, 0.7]) side_enclosure_part(vertical_spacing=lcd_screen_thickness);
 
-  //translate([0, 0, 40]) side_enclosure_part(vertical_spacing=lcd_screen_thickness, rims=false, use_less_support=true);
-
   // Right Side Enclosure
   color(c=[1, 0, 1, 0.7]) translate([lcd_width_with_tolerance, 0, 0]) mirror([1,0,0]) side_enclosure_part();
 
@@ -308,6 +307,33 @@ module lcd_enclosure(
   //   lcd_screen_edge_tolerance,
   //   lcd_enclosure_thickness
   // ]) lcd();
+
+  module triple_stack_ns_mount() {
+    union() {
+      difference() {
+        union() {
+          translate([0, 0, -30]) side_enclosure_part(vertical_spacing=lcd_screen_thickness, rims=false, use_less_support=true);
+          translate([0, 0, -30 + (lcd_enclosure_thickness * 2) + lcd_screen_thickness ]) side_enclosure_part(vertical_spacing=lcd_screen_thickness, rims=false, use_less_support=true, hollow_base=true);
+          translate([0, 0, -30 + (((lcd_enclosure_thickness * 2) + lcd_screen_thickness) * 2) ]) side_enclosure_part(vertical_spacing=lcd_screen_thickness, rims=false, use_less_support=true, hollow_base=true);
+        }
+        translate([
+          -lcd_enclosure_thickness - lcd_screen_edge_tolerance,
+          (lcd_height_with_tolerance / 2) + (85 + lcd_enclosure_thickness) - ((85 + lcd_enclosure_thickness) / 2),
+          -30
+        ]) rotate([0, 0, 270]) translate([0, -lcd_enclosure_thickness, 0]) cube(size=[85, 54 + lcd_enclosure_thickness + lcd_enclosure_thickness, 18.5]);
+      }
+      translate([
+        -lcd_enclosure_thickness - lcd_screen_edge_tolerance,
+        (lcd_height_with_tolerance / 2) + (85 + lcd_enclosure_thickness) - ((85 + lcd_enclosure_thickness) / 2),
+        -30
+      ]) rotate([0, 0, 270]) {
+        case_and_rim(case_thickness = lcd_enclosure_thickness, back_rim=false);
+      }
+    }
+  }
+
+  translate([0, 0, -30]) triple_stack_ns_mount();
+
 }
 
 lcd_enclosure();
