@@ -115,7 +115,7 @@ module full_bridge() {
     connector_bridge_vertical_side();
     translate([0, lcd_screen_edge_tolerance, 0]) connector_bridge_vertical_side();
     translate([(-lcd_width_with_tolerance / 2 / 2) - lcd_enclosure_thickness, 0, 0]) top_curved_bridge_part();
-    mirror([1, 0, 0]) translate([-lcd_width_with_tolerance - lcd_enclosure_thickness - lcd_enclosure_thickness + ((lcd_width_with_tolerance / 2 / 2) + lcd_enclosure_thickness), 0, 0]) color(c=[0, 0, 0]) top_curved_bridge_part();
+    mirror([1, 0, 0]) translate([-lcd_width_with_tolerance - lcd_enclosure_thickness - lcd_enclosure_thickness + ((lcd_width_with_tolerance / 2 / 2) + lcd_enclosure_thickness), 0, 0]) top_curved_bridge_part();
   }
 }
 
