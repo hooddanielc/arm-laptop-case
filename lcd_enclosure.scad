@@ -150,9 +150,7 @@ module lcd_enclosure(
           for (i = [0:1:15]) {
             translate([0, lcd_screen_edge_tolerance * (2 + i), lcd_enclosure_thickness]) cube(size = [lcd_screen_edge_tolerance, 0.2, lcd_screen_thickness]);
           }
-
-          translate([lcd_screen_edge_tolerance, 0, lcd_enclosure_thickness]) cube(size = [0.2, lcd_height_with_tolerance, lcd_screen_thickness]);
-
+          translate([lcd_screen_edge_tolerance - 0.2, 0, lcd_enclosure_thickness]) cube(size = [0.2, lcd_height_with_tolerance, lcd_screen_thickness]);
         }
         
         translate([-(lcd_enclosure_thickness * 2) - (lcd_screen_edge_tolerance), lcd_height_with_tolerance / 4, lcd_enclosure_thickness + vertical_spacing]) side_bridge_face(vertical_spacing=vertical_spacing);
