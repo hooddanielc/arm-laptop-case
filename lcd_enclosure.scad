@@ -1,5 +1,6 @@
 include <libs/nutsnbolts/cyl_head_bolt.scad>
 use <ns_board.scad>
+use <lcd_controller.scad>
 
 module lcd_enclosure(
   lcd_screen_diagonal_size = 260,
@@ -128,6 +129,30 @@ module lcd_enclosure(
           translate([0, 0, vertical_spacing + lcd_enclosure_thickness]) side_top_edge_part(vertical_spacing=vertical_spacing);
           translate([-lcd_enclosure_thickness, lcd_height_with_tolerance - lcd_screen_edge_tolerance, vertical_spacing + lcd_enclosure_thickness]) side_top_rim_part(vertical_spacing=vertical_spacing);
           translate([-lcd_enclosure_thickness, 0, lcd_enclosure_thickness + vertical_spacing]) side_top_rim_part(vertical_spacing=vertical_spacing);
+
+          // supports bottom
+          translate([0, lcd_enclosure_thickness + lcd_screen_thickness + 0.2, 0]) cube(size=[(lcd_width_with_tolerance / 3), 0.2, lcd_enclosure_thickness * 2 + lcd_screen_thickness]);
+          for (i = [1:1:8]) {
+            translate([lcd_screen_edge_tolerance * i, 0, 0]) cube(size = [0.2, lcd_screen_edge_tolerance, lcd_enclosure_thickness * 2 + lcd_screen_thickness]);
+          }
+          translate([(lcd_width_with_tolerance / 3) - 0.2, 0, 0]) cube(size = [0.2, lcd_screen_edge_tolerance, lcd_enclosure_thickness * 2 + lcd_screen_thickness]);
+
+          // supports top
+          translate([0, lcd_screen_height + lcd_screen_edge_tolerance, 0]) {
+            translate([0, lcd_enclosure_thickness + lcd_screen_thickness + 0.2 - lcd_screen_edge_tolerance, 0]) cube(size=[(lcd_width_with_tolerance / 3), 0.2, lcd_enclosure_thickness * 2 + lcd_screen_thickness]);
+            for (i = [1:1:8]) {
+              translate([lcd_screen_edge_tolerance * i, 0, 0]) cube(size = [0.2, lcd_screen_edge_tolerance, lcd_enclosure_thickness * 2 + lcd_screen_thickness]);
+            }
+            translate([(lcd_width_with_tolerance / 3) - 0.2, 0, 0]) cube(size = [0.2, lcd_screen_edge_tolerance, lcd_enclosure_thickness * 2 + lcd_screen_thickness]);
+          }
+
+          // support sides
+          for (i = [0:1:15]) {
+            translate([0, lcd_screen_edge_tolerance * (2 + i), lcd_enclosure_thickness]) cube(size = [lcd_screen_edge_tolerance, 0.2, lcd_screen_thickness]);
+          }
+
+          translate([lcd_screen_edge_tolerance, 0, lcd_enclosure_thickness]) cube(size = [0.2, lcd_height_with_tolerance, lcd_screen_thickness]);
+
         }
         
         translate([-(lcd_enclosure_thickness * 2) - (lcd_screen_edge_tolerance), lcd_height_with_tolerance / 4, lcd_enclosure_thickness + vertical_spacing]) side_bridge_face(vertical_spacing=vertical_spacing);
@@ -281,6 +306,59 @@ module lcd_enclosure(
     }
   }
 
+  module triple_stack_ns_mount() {
+    union() {
+      difference() {
+        union() {
+          translate([0, 0, -30]) side_enclosure_part(vertical_spacing=lcd_screen_thickness, rims=false);
+          translate([0, 0, -30 + (lcd_enclosure_thickness * 2) + lcd_screen_thickness ]) side_enclosure_part(vertical_spacing=lcd_screen_thickness, rims=false, hollow_base=true);
+          translate([0, 0, -30 + (((lcd_enclosure_thickness * 2) + lcd_screen_thickness) * 2) ]) side_enclosure_part(vertical_spacing=lcd_screen_thickness, rims=false, hollow_base=true);
+        }
+        translate([
+          -lcd_enclosure_thickness - lcd_screen_edge_tolerance,
+          (lcd_height_with_tolerance / 2) + (85 + lcd_enclosure_thickness) - ((85 + lcd_enclosure_thickness) / 2),
+          -30
+        ]) rotate([0, 0, 270]) translate([0, -lcd_enclosure_thickness, 0]) cube(size=[85, 54 + lcd_enclosure_thickness + lcd_enclosure_thickness, 40]);
+      }
+      translate([
+        0.7 + -lcd_enclosure_thickness - lcd_screen_edge_tolerance,
+        (lcd_height_with_tolerance / 2) + (85 + lcd_enclosure_thickness) - ((85 + lcd_enclosure_thickness) / 2),
+        -30
+      ]) rotate([0, 0, 270]) {
+        case_and_rim(leg_height = 10, case_thickness = lcd_enclosure_thickness, back_rim=false, rim_height=30.5);
+      }
+    }
+  }
+
+  module triple_stack_lcd_controller_mount() {
+    lcd_controller_width = 90.57797;
+    lcd_controller_height = 65.60828;
+    lcd_controller_relief = 0.5;
+    w = lcd_controller_width + (lcd_controller_relief * 2);
+    h = lcd_controller_height + (lcd_controller_relief * 2);
+
+    union() {
+      difference() {
+        union() {
+          translate([0, 0, -30]) side_enclosure_part(vertical_spacing=lcd_screen_thickness, rims=false);
+          translate([0, 0, -30 + (lcd_enclosure_thickness * 2) + lcd_screen_thickness ]) side_enclosure_part(vertical_spacing=lcd_screen_thickness, rims=false, hollow_base=true);
+          translate([0, 0, -30 + (((lcd_enclosure_thickness * 2) + lcd_screen_thickness) * 2) ]) side_enclosure_part(vertical_spacing=lcd_screen_thickness, rims=false, hollow_base=true);
+        }
+        translate([
+          -lcd_enclosure_thickness - lcd_screen_edge_tolerance,
+          (lcd_height_with_tolerance / 2) + (w + lcd_enclosure_thickness) - ((w + lcd_enclosure_thickness) / 2),
+          -30
+        ]) rotate([0, 0, 270]) translate([0, -lcd_enclosure_thickness, 0]) cube(size=[w, h + lcd_enclosure_thickness, 40]);
+      }
+      translate([
+        lcd_controller_height + lcd_controller_relief - lcd_screen_edge_tolerance - lcd_enclosure_thickness + 1.8,
+        ((lcd_enclosure_thickness + lcd_height_with_tolerance) / 2) - (lcd_controller_width / 2),
+        -30
+      ]) rotate([0, 0, 90]) lcd_controll_mount(extra_rim_height = 8, extra_rim_width = 2, extra_rim_offset_x = -1);
+      
+    }
+  }
+
   // Left Side Enclosure
   color(c=[0, 1, 1, 0.7]) side_enclosure_part(vertical_spacing=lcd_screen_thickness);
 
@@ -302,37 +380,15 @@ module lcd_enclosure(
   ]) full_bridge();
 
   // LCD for debugging
-  // color(c=[0, 0, 0, 0.7]) translate([
-  //   lcd_screen_edge_tolerance,
-  //   lcd_screen_edge_tolerance,
-  //   lcd_enclosure_thickness
-  // ]) lcd();
-
-  module triple_stack_ns_mount() {
-    union() {
-      difference() {
-        union() {
-          translate([0, 0, -30]) side_enclosure_part(vertical_spacing=lcd_screen_thickness, rims=false, use_less_support=true);
-          translate([0, 0, -30 + (lcd_enclosure_thickness * 2) + lcd_screen_thickness ]) side_enclosure_part(vertical_spacing=lcd_screen_thickness, rims=false, use_less_support=true, hollow_base=true);
-          translate([0, 0, -30 + (((lcd_enclosure_thickness * 2) + lcd_screen_thickness) * 2) ]) side_enclosure_part(vertical_spacing=lcd_screen_thickness, rims=false, use_less_support=true, hollow_base=true);
-        }
-        translate([
-          -lcd_enclosure_thickness - lcd_screen_edge_tolerance,
-          (lcd_height_with_tolerance / 2) + (85 + lcd_enclosure_thickness) - ((85 + lcd_enclosure_thickness) / 2),
-          -30
-        ]) rotate([0, 0, 270]) translate([0, -lcd_enclosure_thickness, 0]) cube(size=[85, 54 + lcd_enclosure_thickness + lcd_enclosure_thickness, 18.5]);
-      }
-      translate([
-        -lcd_enclosure_thickness - lcd_screen_edge_tolerance,
-        (lcd_height_with_tolerance / 2) + (85 + lcd_enclosure_thickness) - ((85 + lcd_enclosure_thickness) / 2),
-        -30
-      ]) rotate([0, 0, 270]) {
-        case_and_rim(case_thickness = lcd_enclosure_thickness, back_rim=false);
-      }
-    }
-  }
+  color(c=[0, 0, 0, 0.7]) translate([
+    lcd_screen_edge_tolerance,
+    lcd_screen_edge_tolerance,
+    lcd_enclosure_thickness
+  ]) lcd();
 
   translate([0, 0, -30]) triple_stack_ns_mount();
+
+  translate([0, 0, -80]) triple_stack_lcd_controller_mount();
 
 }
 

@@ -8,7 +8,7 @@ module case_and_rim(
   case_thickness = 2.5,
   screw_hole_clearance = 2.75,
   screw_head_width = 5,
-  screw_standoff_width = 5,
+  screw_standoff_width = 10,
   base_without_legs = true,
   base_legs = true,
   leg_height = 5,
@@ -28,9 +28,9 @@ module case_and_rim(
 
   module nutcatch_m25() {
     rotate([180, 0, 180]) difference() {
-      translate([0, 0, case_thickness / -2]) cube(size=[6, 10, case_thickness * 2], center=true);
+      translate([0, 0, case_thickness / -2]) cube(size=[10, 10, case_thickness * 3], center=true);
       {
-        nutcatch_sidecut("M2.5", l=100, clk=0.1, clh=0.1, clsl=0.1);
+        nutcatch_sidecut("M2.5", l=100, clk=2, clh=1, clsl=2);
         hole_through(name="M2.5", l=50+5, cl=0.1, h=0, hcl=0.4);
       }
     }
@@ -38,7 +38,7 @@ module case_and_rim(
 
   module reversenutcatch_m25() {
     rotate([180, 0, 180]) {
-      nutcatch_sidecut("M2.5", l=100, clk=0.1, clh=0.1, clsl=0.1);
+      nutcatch_sidecut("M2.5", l=100, clk=2, clh=1, clsl=2);
       hole_through(name="M2.5", l=50+5, cl=0.1, h=0, hcl=0.4);
     }
   }
