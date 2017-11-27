@@ -68,7 +68,7 @@ module case_and_rim(
         cylinder(
           $fn = 25,
           h = height,
-          r = screw_standoff_width / 2,
+          r = 3,
           center = true
         );
         translate([0, 0, -height / 2]) nutcatch_m25();
