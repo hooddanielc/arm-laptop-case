@@ -117,7 +117,7 @@ module lcd_enclosure(
     );
   }
 
-  module side_enclosure_part(vertical_spacing=lcd_screen_thickness, hollow_base=false, rims=true, use_less_support=false) {
+  module side_enclosure_part(vertical_spacing=lcd_screen_thickness, hollow_base=false, hollow=false, rims=true, use_less_support=false) {
     difference() {
       union() {
         side_base_part();
@@ -138,7 +138,7 @@ module lcd_enclosure(
           translate([(lcd_width_with_tolerance / 3) - 0.2, 0, 0]) cube(size = [0.2, lcd_screen_edge_tolerance, lcd_enclosure_thickness * 2 + lcd_screen_thickness]);
 
           // supports top
-          translate([0, lcd_screen_height + lcd_screen_edge_tolerance, 0]) {
+          translate([0, lcd_screen_height + lcd_screen_edge_tolerance + .3, 0]) {
             translate([0, lcd_enclosure_thickness + lcd_screen_thickness + 0.2 - lcd_screen_edge_tolerance, 0]) cube(size=[(lcd_width_with_tolerance / 3), 0.2, lcd_enclosure_thickness * 2 + lcd_screen_thickness]);
             for (i = [1:1:8]) {
               translate([lcd_screen_edge_tolerance * i, 0, 0]) cube(size = [0.2, lcd_screen_edge_tolerance, lcd_enclosure_thickness * 2 + lcd_screen_thickness]);
@@ -176,6 +176,14 @@ module lcd_enclosure(
           lcd_enclosure_thickness,
           -lcd_enclosure_thickness
         ]) cube(size=[lcd_width_with_tolerance, lcd_height_with_tolerance - lcd_enclosure_thickness, lcd_enclosure_thickness * 4 + vertical_spacing]);
+      }
+
+      if (hollow) {
+        translate([
+          lcd_screen_edge_tolerance,
+          lcd_screen_edge_tolerance,
+          0
+        ]) cube(size=[lcd_screen_width, lcd_screen_height, lcd_enclosure_thickness + vertical_spacing]);
       }
 
       if (use_less_support) {
@@ -358,7 +366,7 @@ module lcd_enclosure(
   }
 
   // Left Side Enclosure
-  color(c=[0, 1, 1, 0.7]) side_enclosure_part(vertical_spacing=lcd_screen_thickness);
+  color(c=[0, 1, 1, 0.7]) side_enclosure_part(vertical_spacing=lcd_screen_thickness, hollow = true);
 
   // Right Side Enclosure
   color(c=[1, 0, 1, 0.7]) translate([lcd_width_with_tolerance, 0, 0]) mirror([1,0,0]) side_enclosure_part();
