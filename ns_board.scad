@@ -11,7 +11,7 @@ module case_and_rim(
   screw_standoff_width = 10,
   base_without_legs = true,
   base_legs = true,
-  leg_height = 5,
+  leg_height = 7,
   rim_height = 16,
   socket_hole_relief = 2
 ) {
@@ -101,9 +101,9 @@ module case_and_rim(
   }
 
   module screw_hole_standoffs(height = 10) {
-    translate(concat(bottom_left_screw_center_origin, case_thickness)) standoff(height=height);
+    translate(concat(bottom_left_screw_center_origin, case_thickness)) rotate([0, 0, 180]) standoff(height=height);
     translate(concat(bottom_right_screw_center_origin, case_thickness)) standoff(height=height);
-    translate(concat(top_left_screw_center_origin, case_thickness)) standoff(height=height);
+    translate(concat(top_left_screw_center_origin, case_thickness)) rotate([0, 0, 180]) standoff(height=height);
     translate(concat(top_right_screw_center_origin, case_thickness)) standoff(height=height);
   }
 

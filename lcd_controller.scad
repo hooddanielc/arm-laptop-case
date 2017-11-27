@@ -43,6 +43,8 @@ module lcd_controll_mount(
   dc_connector_width = 10.7;
   dc_connector_height = 12.4;
 
+  nutcatch_height = 5;
+
   module connector_holes(connector_relief = 1) {
     x = connector_relief * 2;
     o = -connector_relief;
@@ -76,7 +78,7 @@ module lcd_controll_mount(
     translate([0, 0, lcd_controller_case_thickness + 0.01]) hole_through(
       $fn=30,
       name="M3",
-      l=lcd_controller_case_thickness + 1,
+      l=100,
       cl=0.1,
       h=0,
       hcl=50
@@ -84,8 +86,8 @@ module lcd_controll_mount(
   }
 
   module screw_riser(name = "M3", $fn = 10, h = lcd_controller_base_leg_height) {
-    translate([0, 0, h]) {
-      difference() {
+    translate([0, 0, h]) union() {
+      translate([0, 0, 5]) difference() {
 
         hole_through(
           $fn = 50,
@@ -105,6 +107,12 @@ module lcd_controll_mount(
           hcl=50
         );
       }
+
+      translate([0, 0, -1.6 - (lcd_controller_base_leg_height - nutcatch_height)]) difference() {
+        translate([0, 0, -0.9]) cube(size = [10, 10, 5], center = true);
+        nutcatch_sidecut("M3", l=10, clk=1, clsl=1, clh=1);
+        lcd_controller_screw_hole();
+      }
     }
   }
 
@@ -119,10 +127,10 @@ module lcd_controll_mount(
       }
 
       translate([0, 0, lcd_controller_case_thickness]) {
-        translate(lcd_bottom_left_screw_pos) screw_riser();
-        translate(lcd_bottom_right_screw_pos) screw_riser();
-        translate(lcd_top_left_screw_pos) screw_riser();
-        translate(lcd_top_right_screw_pos) screw_riser();
+        translate(lcd_bottom_left_screw_pos) rotate([0, 0, 0]) screw_riser();
+        translate(lcd_bottom_right_screw_pos) rotate([0, 0, 180]) screw_riser();
+        translate(lcd_top_left_screw_pos) rotate([0, 0, 0]) screw_riser();
+        translate(lcd_top_right_screw_pos) rotate([0, 0, -180]) screw_riser();
       }
     }
   }
@@ -132,12 +140,12 @@ module lcd_controll_mount(
       translate([extra_rim_offset_x, extra_rim_offset_y, 0]) cube(size=[
         lcd_controller_width + extra_rim_width,
         lcd_controller_case_thickness,
-        vga_video_height + lcd_controller_base_leg_height + (lcd_controller_case_thickness * 3) + extra_rim_height
+        vga_video_height + lcd_controller_base_leg_height + (lcd_controller_case_thickness * 3) + extra_rim_height + nutcatch_height
       ]);
       translate([
         0,
         0,
-        lcd_controller_case_thickness + lcd_pcb_height + lcd_controller_base_leg_height
+        lcd_controller_case_thickness + lcd_pcb_height + lcd_controller_base_leg_height + nutcatch_height
       ]) connector_holes();
     }
   }
@@ -146,9 +154,7 @@ module lcd_controll_mount(
     base_with_legs();
     translate([0, lcd_controller_height + lcd_pcb_relief, 0]) lcd_port_holes();
   }
+
 }
 
-difference() {
-  lcd_controll_mount();
-  translate([-5, -100 + 58, -1]) cube(size=[100,100,100]);
-}
+lcd_controll_mount();

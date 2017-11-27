@@ -352,7 +352,7 @@ module lcd_enclosure(
         lcd_controller_height + lcd_controller_relief - lcd_screen_edge_tolerance - lcd_enclosure_thickness + 1.8,
         ((lcd_enclosure_thickness + lcd_height_with_tolerance) / 2) - (lcd_controller_width / 2),
         -30
-      ]) rotate([0, 0, 90]) lcd_controll_mount(extra_rim_height = 8, extra_rim_width = 2, extra_rim_offset_x = -1);
+      ]) rotate([0, 0, 90]) lcd_controll_mount(extra_rim_height = 3, extra_rim_width = 2, extra_rim_offset_x = -1);
       
     }
   }
@@ -384,8 +384,10 @@ module lcd_enclosure(
     lcd_enclosure_thickness
   ]) lcd();
 
+  // 96board compatable mount
   translate([0, 0, -30]) triple_stack_ns_mount();
 
+  // PCB800099 lcd controller mount
   translate([0, 0, -80]) triple_stack_lcd_controller_mount();
 
 }
